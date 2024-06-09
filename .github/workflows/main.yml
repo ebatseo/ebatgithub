@@ -1,0 +1,43 @@
+name: Main
+
+on:
+  schedule:
+    - cron: '20 4 * * *'
+
+jobs:
+  make-contribution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Make daily contribution
+        run: |
+          echo " - " >> new.txt
+          echo "$(date)" >> new.txt
+          echo " - " >> new.txt
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: "ebatseo"
+          author_email: "ebatseo@gmail.com"
+          message: "ebat"
+          add: "new.txt"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: daily-contribution
+          # Set the Git credentials - replace this with your own secrets
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Open pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: "ebat"
+          commit-message: "ebat"
+          branch: daily-contribution
+          base: main
+          # Set the pull request body - replace this with your own content
+          body: "ebat."
+          # Set the Git credentials - replace this with your own secrets
+          token: ${{ secrets.GITHUB_TOKEN }}
